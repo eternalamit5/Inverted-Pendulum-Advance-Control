@@ -1,0 +1,188 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% LaTeX Vorlage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Dokumentenklasse
+% hier: KOMA-Script Klasse mit deutschen Features
+% Eventuell in MikTeX das Paket "koma-script" nachinstallieren!
+\documentclass[12pt, a4paper, DIV12]{scrartcl}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% PRÄAMBEL %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Deutsche Lokalisation (Umlaute etc.)
+\usepackage[T1]{fontenc}
+\usepackage[latin1]{inputenc} % Zeichencodierung (nicht unwichtig!)
+\usepackage[ngerman]{babel}   % Deutsche Silbentrennung, etc.
+
+% Mathematik-Erweiterungen
+\usepackage{amsmath,amsfonts,amssymb}
+%\usepackage[locale=DE]{siunitx}
+
+%Bessere verbatim-Umgebung mit Syntax-Highlighting
+\usepackage{listings}
+
+% Sauberes Setzen von URLs
+\usepackage{url}
+
+% Farbige Akzente setzen
+\usepackage{xcolor}
+
+% Einbinden von Grafiken
+\usepackage{graphicx}
+
+%Einbinden von Tabellen
+\usepackage{booktabs}
+
+% PDF Optimierungen und Verlinkungen
+\usepackage{hyperref}
+
+% Möglichkeit direkt mit LaTeX zu zeichnen
+% \usepackage{tikz}
+
+% Dokumentmetadaten
+\title{\LaTeX{} Dokument}
+\author{(Vorname Nachname)}
+\date{\today} % oder: \today
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% DOKUMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\section{Linearisation}
+
+\begin{align}
+	\ddot{\alpha}=\dfrac{3}{2l}\left(g\sin(\alpha)-\ddot{x}_w\cos(\alpha) \right) 
+\end{align}
+
+\begin{align}
+	f_{\text{lin}}=f(x_0)+\dfrac{\partial f}{\partial x}(x_0)\cdot\left(x-x_0 \right) +\underbrace{r(x)}\\
+	\quad \quad \quad \approx 0 \nonumber
+\end{align}
+
+\begin{align}
+	\ddot{\alpha}&=\dfrac{3}{2l}\left[ g\sin(x_0)-\ddot{x}_w\cos(x_0)+\left( g\cos(x_0)+\ddot{x}_w\sin(x_0)\right)\cdot\left(\alpha-x_0 \right) \right] \qquad\Bigg|x_0=0 \\ \nonumber
+	&=\dfrac{3}{2l}\left[ g\sin(0)-\ddot{x}_w\cos(0)+\left( g\cos(0)+\ddot{x}_w\sin(0)\right)\cdot\left(\alpha-0 \right) \right]\\ \nonumber
+	&=\dfrac{3}{2l}\left(g\alpha  -\ddot{x}_w \right)
+\end{align}
+
+\begin{align}
+	\ddot{x}_w&=-\dfrac{1}{T_1}\dot{x}_w+\dfrac{1}{T_1}u \nonumber\\
+	\ddot{\alpha}&=\dfrac{3}{2l}\left(g\alpha  -\ddot{x}_w \right)\\
+	\Rightarrow\ddot{\alpha}&=\dfrac{3}{2l}\left(g\alpha + \dfrac{1}{T_1}\dot{x}_w-\dfrac{1}{T_1}u \right)\\
+\end{align}
+
+\begin{align}
+	\begin{pmatrix}
+	\dot{x}_w \\
+	\ddot{x}_w \\
+	\dot{\alpha}\\
+	\ddot{\alpha}
+	\end{pmatrix}
+	=
+	\begin{pmatrix}
+	0&1&0&0\\
+	0&-\frac{1}{T_1}&0&0\\
+	0&0&0&1\\
+	0&\frac{3}{2lT_1}&\frac{3g}{2l}&0
+	\end{pmatrix}
+	\begin{pmatrix}
+	x_w \\
+	\dot{x}_w \\
+	{\alpha}\\
+	\dot{\alpha}
+	\end{pmatrix}
+	+
+	\begin{pmatrix}
+	0\\
+	\frac{1}{T_1}\\
+	0\\
+	-\frac{1}{T_1}
+	\end{pmatrix}
+	u
+\end{align}
+
+\begin{align}
+	\begin{pmatrix}
+	\dot{x}_w\\
+	\dot{\alpha}
+	\end{pmatrix}
+	=
+	\begin{pmatrix}
+	0&1&0&0\\
+	0&0&0&1
+	\end{pmatrix}
+	\begin{pmatrix}
+	x_w \\
+	\dot{x}_w \\
+	{\alpha}\\
+	\dot{\alpha}
+	\end{pmatrix}
+\end{align}
+
+\section{Characteristics}
+
+please refer Matlab:\\
+$\qquad\Rightarrow$ controllable\\
+$\qquad\Rightarrow$ not observable \\
+\\
+
+\section{Control}
+
+\subsection{Soar up part}
+
+For $|\alpha|>\dfrac{\pi}{4}$
+
+\begin{align}
+	\dot{\alpha}> 0 \qquad \ddot{x}_w<0\\ \nonumber
+	\dot{\alpha}< 0 \qquad \ddot{x}_w>0\\ \nonumber
+	\Rightarrow \quad k(\dot{\alpha})=u \\ \nonumber
+	\Rightarrow \quad F=
+	\begin{pmatrix}
+		0&0&0&k
+	\end{pmatrix} 	
+\end{align}
+
+\subsection{Balance part}
+For $|\alpha|<\dfrac{\pi}{4}$ \\
+
+F-Matrix with Riccati\\
+
+\begin{align}
+Q=
+	\begin{pmatrix}
+		1&0&0&0\\
+		0&1&0&0\\
+		0&0&10&0\\
+		0&0&0&1
+	\end{pmatrix}
+	\qquad r=1
+\end{align}
+\begin{align}
+F=
+	\begin{pmatrix}
+		-1&3.1652&5.8983&1.3573
+	\end{pmatrix}
+\end{align}
+
+F-Matrix with pole placement
+
+\begin{align}
+p=
+\begin{pmatrix}
+-10&-11&-12&-13
+\end{pmatrix}
+\end{align}
+
+\begin{align}
+F=
+\begin{pmatrix}
+-23.0316&2.0397&6.4678&1.2227
+\end{pmatrix}
+\end{align}
+
+\end{document}
