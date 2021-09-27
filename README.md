@@ -1,1 +1,1 @@
-# Inverted-Pendulum-Control-Lab
+# Inverted-Pendulum
